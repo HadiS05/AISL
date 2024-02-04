@@ -11,10 +11,17 @@ from kivy.base import EventLoop
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 import cv2
+import datetime
+import time
 
+def TextWithTime(oldtext, newtext):
+    date = str(datetime.date.today())
+    local_time =str( time.strftime("%I:%M:%S"))
+    return oldtext + "\n\n" + "[ " + date + " "+ local_time + " ]: " + newtext
 
 capture = None
-Generated_text = "sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"*90
+Generated_text = TextWithTime("","sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"*90)
+
 
 class SecondWin(Screen):
     global Generated_text
@@ -94,10 +101,3 @@ if __name__ == "__main__":
 
 
 
-"""
-        Label:
-            text: root.text_generated
-            text_size: self.width, None
-            size_hint_y: None
-            height: self.texture_size[1]
-"""

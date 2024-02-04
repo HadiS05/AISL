@@ -1,0 +1,74 @@
+WinManager:
+    CamHome:
+    SecondWin:
+
+
+<CamHome>:
+    name: "main"
+
+
+    FloatLayout:
+        Image:
+            size_hint: 1,1
+
+        KivyCamera:
+            id: cam
+            size_hint: 1, 0.9
+            pos_hint: {"top":1.0}
+
+        Button:
+            id: butt_start
+            size_hint: 0.5,0.1
+            text: "start"
+            on_press: root.dostart()
+
+        Button:
+            id: butt_exit
+            text: "stop"
+            size_hint: 0.5,0.1
+            pos_hint: {"right":1.0}
+            on_press: 
+                app.root.current = "second"
+                root.manager.transition.direction = "left"
+                root.doexit()
+
+
+
+
+<SecondWin>:
+    name: "second"
+
+
+    FloatLayout:
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            size_hint: 1,0.92
+            pos_hint: {"top":1}
+            Label:
+                id: log_label
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                padding: 10, 10
+                text: 
+                    root.manager.text_gen
+
+
+
+        Button:
+            text: "Go Back"
+            size_hint: 0.5,0.08
+            pos_hint: {"x":0}
+            color: 0.5,0.5,0.5,1
+            on_release:
+                app.root.current = "main"
+                root.manager.transition.direction = "right"
+
+        Button:
+            text: "Delete logs"
+            size_hint: 0.5,0.08
+            pos_hint: {"x":0.5}
+            color: 0.5,0.5,0.5,1
+            

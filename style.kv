@@ -8,6 +8,8 @@ WinManager:
 
 
     FloatLayout:
+        Image:
+            size_hint: 1,1
 
         KivyCamera:
             id: cam
@@ -37,13 +39,17 @@ WinManager:
     name: "second"
 
     FloatLayout:
-        Label:
-            multiline: True
-            text: root.y
-            halign: 'center'
-            text_size: self.size
-            pos_hint: {'center_x':0.5, "y": 0.5}
 
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            Label:
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                padding: 10, 10
+                text: root.text_generated 
+    
 
 
         Button:

@@ -8,19 +8,23 @@ from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics.texture import Texture
 from kivy.base import EventLoop
+from kivy.uix.scrollview import ScrollView
+from kivy.properties import StringProperty
 import cv2
 
 
 capture = None
-Generated_text = "sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"
+Generated_text = "sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"*90
 
 class SecondWin(Screen):
     global Generated_text
-    y= Generated_text
+    text_generated= Generated_text
 
 
 class WinManager(ScreenManager):
     pass
+
+
 
 
 class KivyCamera(Image):
@@ -88,3 +92,12 @@ class MyMainApp(App):
 if __name__ == "__main__":
     MyMainApp().run()
 
+
+
+"""
+        Label:
+            text: root.text_generated
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+"""

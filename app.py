@@ -12,9 +12,28 @@ from kivy.properties import StringProperty
 import cv2
 import datetime
 import time
+import numpy as np
+import os
+import tensorflow as tf
 
+model =tf.keras.models.load_model('ASL2.h5')
+# Prediction function
+def predict(self, *args, path):
+    global model
+    # Specify thresholds
+    detection_threshold = 0.95
+    arr = cv2.imread(path)
+    new_array = cv2.resize(arr,(32,32))
+    new_arr = new_array.reshape(1,32,32,-1)
+    predictions = model.predict(new_arr) ##predict classes
+    predictionsss = model.predict(new_arr)[0]
+    predicti = np.argmax(predictions, axis=1) ##get the index of the highest probability
+    
+    # Detection Threshold: Metric above which a prediciton is considered positive 
+    detection = np.sum(np.array(predicti[0]) > detection_threshold)
 
-
+    if detection:
+        return predictionsss[2]
 
 def TextWithTime(oldtext, newtext):
     date = str(datetime.date.today())
@@ -23,7 +42,7 @@ def TextWithTime(oldtext, newtext):
 
 capture = None
 Generated_text = StringProperty()
-Generated_text = "sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"*90
+Generated_text = ""
 
 
 class SecondWin(Screen):
@@ -50,7 +69,7 @@ class KivyCamera(Image):
         super(KivyCamera, self).__init__(**kwargs)
         self.capture = None
 
-    def start(self, capture, fps=30):
+    def start(self, capture, fps=1):
         self.capture = capture
         Clock.schedule_interval(self.update, 1.0 / fps)
 
@@ -60,6 +79,7 @@ class KivyCamera(Image):
         self.capture = None
 
     def update(self, dt):
+        global Generated_text
         return_value, frame = self.capture.read()
         if return_value:
             texture = self.texture
@@ -68,6 +88,11 @@ class KivyCamera(Image):
                 self.texture = texture = Texture.create(size=(w, h))
                 texture.flip_vertical()
                 texture.flip_horizontal()
+            predict_image = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+            predict_image = cv2.resize(predict_image,(32,32))
+            cv2.imwrite('prediction.png',predict_image)
+            prediction = predict(self,path='prediction.png')
+            print(prediction)
             texture.blit_buffer(frame.tobytes(), colorfmt='bgr')
             self.canvas.ask_update()
 
@@ -102,6 +127,8 @@ kv = Builder.load_file("style.kv")
 class MyMainApp(App):
     
     def build(self):
+        global model
+        model = tf.keras.models.load_model('ASL2.h5')
         return kv
 
 

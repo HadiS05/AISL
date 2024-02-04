@@ -1,4 +1,3 @@
-
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -14,23 +13,34 @@ import cv2
 import datetime
 import time
 
+
+
+
 def TextWithTime(oldtext, newtext):
     date = str(datetime.date.today())
     local_time =str( time.strftime("%I:%M:%S"))
     return oldtext + "\n\n" + "[ " + date + " "+ local_time + " ]: " + newtext
 
 capture = None
-Generated_text = TextWithTime("","sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"*90)
+Generated_text = StringProperty()
+Generated_text = "sfeskfeksjfnekjfnskfnsfnes;ef;eisjf;osijfsfsuhusnvsuhefs"*90
 
 
 class SecondWin(Screen):
-    global Generated_text
-    text_generated= Generated_text
+
+    def on_enter(self):
+        global Generated_text
+
+        self.manager.text_gen = Generated_text
+        self.manager.text_gen = TextWithTime(self.manager.text_gen,"abdhssss")
+
+
 
 
 class WinManager(ScreenManager):
-    pass
-
+    global Generated_text
+    text_gen =StringProperty("1234")
+    
 
 
 
@@ -40,11 +50,12 @@ class KivyCamera(Image):
         super(KivyCamera, self).__init__(**kwargs)
         self.capture = None
 
-    def start(self, capture, fps=90):
+    def start(self, capture, fps=30):
         self.capture = capture
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def stop(self):
+
         Clock.unschedule_interval(self.update)
         self.capture = None
 
@@ -64,8 +75,6 @@ class KivyCamera(Image):
 
 
 
-
-
 class CamHome(Screen):
 
     def init_cam(self):
@@ -78,6 +87,7 @@ class CamHome(Screen):
 
     def doexit(self):
         global capture
+
         if capture != None:
             capture.release()
             capture = None
@@ -92,7 +102,6 @@ kv = Builder.load_file("style.kv")
 class MyMainApp(App):
     
     def build(self):
-
         return kv
 
 

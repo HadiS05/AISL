@@ -38,24 +38,37 @@ WinManager:
 <SecondWin>:
     name: "second"
 
+
     FloatLayout:
 
         ScrollView:
             do_scroll_y: True
             do_scroll_x: False
+            size_hint: 1,0.92
+            pos_hint: {"top":1}
             Label:
+                id: log_label
                 size_hint_y: None
                 height: self.texture_size[1]
                 text_size: self.width, None
                 padding: 10, 10
-                text: root.text_generated 
-    
+                text: 
+                    root.manager.text_gen
+
 
 
         Button:
             text: "Go Back"
-            size_hint: 0.5,0.1
-            pos_hint: {"x":0.25}
+            size_hint: 0.5,0.08
+            pos_hint: {"x":0}
+            color: 0.5,0.5,0.5,1
             on_release:
                 app.root.current = "main"
                 root.manager.transition.direction = "right"
+
+        Button:
+            text: "Delete logs"
+            size_hint: 0.5,0.08
+            pos_hint: {"x":0.5}
+            color: 0.5,0.5,0.5,1
+            

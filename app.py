@@ -18,22 +18,18 @@ import tensorflow as tf
 
 model =tf.keras.models.load_model('ASL2.h5')
 # Prediction function
-def predict(self, *args, path):
-    global model
-    # Specify thresholds
-    detection_threshold = 0.95
-    arr = cv2.imread(path)
-    new_array = cv2.resize(arr,(32,32))
-    new_arr = new_array.reshape(1,32,32,-1)
-    predictions = model.predict(new_arr) ##predict classes
-    predictionsss = model.predict(new_arr)[0]
-    predicti = np.argmax(predictions, axis=1) ##get the index of the highest probability
-    
-    # Detection Threshold: Metric above which a prediciton is considered positive 
-    detection = np.sum(np.array(predicti[0]) > detection_threshold)
+import numpy as np
+from PIL import Image
 
-    if detection:
-        return predictionsss[2]
+def predict_image(model, image_path):
+    target_dimensions = (64, 64)
+    img = Image.open(image_path)
+    img = img.resize(target_dimensions)
+    img_array = np.array(img)
+    img_array = img_array.astype('float32') / 255.0
+    img_array = img_array.reshape(1, 64, 64, 3)
+    prediction = model.predict(img_array)
+    return prediction
 
 def TextWithTime(oldtext, newtext):
     date = str(datetime.date.today())
@@ -91,7 +87,7 @@ class KivyCamera(Image):
             predict_image = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
             predict_image = cv2.resize(predict_image,(32,32))
             cv2.imwrite('prediction.png',predict_image)
-            prediction = predict(self,path='prediction.png')
+            prediction = predict(self,path='A_Test.jpg')
             print(prediction)
             texture.blit_buffer(frame.tobytes(), colorfmt='bgr')
             self.canvas.ask_update()
